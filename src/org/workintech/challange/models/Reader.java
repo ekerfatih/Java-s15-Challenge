@@ -1,10 +1,7 @@
-package org.workintech.challange.person;
+package org.workintech.challange.models;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.workintech.challange.Book;
-import org.workintech.challange.Status;
 
 //TODO 5 kitap limiti
 public class Reader extends Person {
@@ -24,7 +21,7 @@ public class Reader extends Person {
     }
 
     public void barrow_book(Book book) {
-        //TODO ask from library
+
     }
 
     public void return_book() {

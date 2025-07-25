@@ -1,7 +1,4 @@
-package org.workintech.challange;
-
-import org.workintech.challange.person.Author;
-import org.workintech.challange.person.Reader;
+package org.workintech.challange.models;
 
 import java.util.Date;
 import java.util.Objects;
@@ -46,6 +43,16 @@ public class Book {
         this.author = author;
         this.category = category;
         this.name = name;
+        this.release_date = date;
+    }
+
+    public Book(long id, Author author, String name, Date date, Category category, String edition, double price) {
+        this.id = id;
+        this.author = author;
+        this.category = category;
+        this.name = name;
+        this.price = price;
+        this.edition = edition;
         this.release_date = date;
     }
 

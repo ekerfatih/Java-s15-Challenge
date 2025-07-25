@@ -1,6 +1,4 @@
-package org.workintech.challange.person;
-
-import org.workintech.challange.Book;
+package org.workintech.challange.models;
 
 public interface ILendbook {
 

@@ -1,4 +1,4 @@
-package org.workintech.challange.person;
+package org.workintech.challange.models;
 
 public abstract class Person {
     @Override

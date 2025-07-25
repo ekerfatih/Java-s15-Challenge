@@ -1,7 +1,4 @@
-package org.workintech.challange.person;
-
-import org.workintech.challange.Book;
-import org.workintech.challange.Category;
+package org.workintech.challange.models;
 
 import java.util.Date;
 import java.util.HashSet;

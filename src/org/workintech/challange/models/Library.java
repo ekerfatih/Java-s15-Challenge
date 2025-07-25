@@ -1,12 +1,6 @@
-package org.workintech.challange.library;
+package org.workintech.challange.models;
 
 import java.util.*;
-import java.util.function.Predicate;
-
-import org.workintech.challange.Book;
-import org.workintech.challange.Category;
-import org.workintech.challange.person.Author;
-import org.workintech.challange.person.Reader;
 
 public class Library {
     private static Library instance;
@@ -20,6 +14,7 @@ public class Library {
 
     private static Set<Author> authorSet = new HashSet<>();
     Map<Book, Integer> books;
+    Map<Book, Reader> barrowMap;
     Set<Reader> readers = new HashSet<>();
 
     private Library() {
@@ -111,19 +106,33 @@ public class Library {
     }
 
     public <T> Book searchBook(T value) {
-        if (value instanceof Integer id) {
+        if (value instanceof String str) {
+            try {
+                int id = Integer.parseInt(str);
+                for (Book book : books.keySet()) {
+                    if (book.getId() == id) {
+                        return book;
+                    }
+                }
+            } catch (NumberFormatException ignored) {
+                // Not a number, continue to string match
+            }
+
+            for (Book book : books.keySet()) {
+                if (book.get_title().equalsIgnoreCase(str) ||
+                        book.get_author().getName().equalsIgnoreCase(str)) {
+                    return book;
+                }
+            }
+
+        } else if (value instanceof Integer id) {
             for (Book book : books.keySet()) {
                 if (book.getId() == id) {
                     return book;
                 }
             }
-        } else if (value instanceof String name) {
-            for (Book book : books.keySet()) {
-                if (book.get_title().equalsIgnoreCase(name) || book.get_author().getName().equalsIgnoreCase(name)) {
-                    return book;
-                }
-            }
         }
+
         return null;
     }
 
