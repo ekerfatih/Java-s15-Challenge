@@ -1,11 +1,14 @@
 package org.workintech.challange.console;
 
 import org.workintech.challange.models.Library;
+import org.workintech.challange.models.Member;
 
 import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Console {
+    private Member loggedInMember;
+
     public Console() {
         init();
     }
@@ -19,6 +22,8 @@ public class Console {
         System.out.println("2- Member");
         System.out.println("3- Librarian");
         String c = s.nextLine();
+        clearScreen();
+        loggedInMember = null;
         switch (c) {
             case "1":
                 GuestUI();
@@ -65,8 +70,16 @@ public class Console {
                 System.out.println(Library.getInstance().searchBook(searchKey));
                 BackOrExit(this::GuestUI);
                 break;
+            default:
+                init();
 
         }
+    }
+
+    private void direct_to_main_menu() {
+        System.out.println("\n***********************************");
+        System.out.println("Enter anything else to go main menu");
+        System.out.println("***********************************");
     }
 
     private void BackOrExit(Runnable callback) {
@@ -91,33 +104,134 @@ public class Console {
     }
 
     private void MemberUI() {
+        login();
+        Scanner s = new Scanner(System.in);
+        clearScreen();
+        System.out.println(String.format("Welcome %s", loggedInMember.getReader().getName()));
+        System.out.println("What would you like to do?\n\n");
+        System.out.println("1- List Books");
+        System.out.println("2- List Books by Category ");
+        System.out.println("3- Search Books");
+        System.out.println("4- Barrow book");
+        System.out.println("5- Give book back");
+        System.out.println("6- See your books");
+        direct_to_main_menu();
+        String answer = s.nextLine();
+        clearScreen();
+        switch (answer) {
+            case "1":
+                clearScreen();
+                Library.getInstance().ListBooks();
+                BackOrExit(this::MemberUI);
+                break;
+            case "2":
+                clearScreen();
+                Library.getInstance().getEnumValues();
+                System.out.println("Please select a category");
+                Library.getInstance().ListByCategory(Integer.parseInt(s.nextLine()));
+                BackOrExit(this::MemberUI);
+                break;
+            case "3":
+                System.out.println("Please enter your search key it can be ID, Author or Book name");
+                String searchKey = s.nextLine();
+                System.out.println(Library.getInstance().searchBook(searchKey));
+                BackOrExit(this::MemberUI);
+                break;
+            case "4":
+                System.out.println("Please enter requested book id");
+                int requestID = Integer.parseInt(s.nextLine());
+                Library.getInstance().request_book(requestID, loggedInMember.getReader());
+                BackOrExit(this::MemberUI);
+                break;
+            case "5":
+                System.out.println("Your current books :");
+                loggedInMember.getReader().bookList();
+                System.out.println("\nPlease enter the book id you want to give back");
+                Library.getInstance().book_take_back(loggedInMember.getReader().return_book(Integer.parseInt(s.nextLine())), loggedInMember.getReader());
+                BackOrExit(this::MemberUI);
+                break;
+            case "6":
+                System.out.println("Your current books :");
+                loggedInMember.getReader().bookList();
+                BackOrExit(this::MemberUI);
+                break;
+            default:
+                init();
+
+        }
+    }
+
+    private void LibrarianUI() {
         Scanner input = new Scanner(System.in);
         String name, password;
-
         while (true) {
             System.out.println("Please enter your username (*_*)");
             name = input.nextLine();
             System.out.println("Please enter your password (-_-)");
             password = input.nextLine();
-
-            if (name.equalsIgnoreCase("user") && password.equalsIgnoreCase("user")) {
+            if (name.equals("admin") && password.equals("admin")) {
                 break;
             }
 
             System.out.println("\u001B[31mWrong username or password\u001B[0m");
         }
-
+        Scanner s = new Scanner(System.in);
         clearScreen();
-        System.out.println("Welcome Dear");
+        System.out.println("Welcome Admin");
         System.out.println("What would you like to do?\n\n");
         System.out.println("1- List Books");
-        System.out.println("2- Search Books");
-        System.out.println("3- Barrow book");
-        System.out.println("4- Give book back");
-        System.out.println("5- See your credentials");
+        System.out.println("2- List Books by Category");
+        System.out.println("3- Search Books");
+        System.out.println("4- List barrowed books");
+        System.out.println("5- Add new book to library");
+        System.out.println("6- Delete a book from library");
+        direct_to_main_menu();
+        String answer = s.nextLine();
+        clearScreen();
+        switch (answer) {
+            case "1":
+                clearScreen();
+                Library.getInstance().ListBooks();
+                BackOrExit(this::LibrarianUI);
+                break;
+            case "2":
+                clearScreen();
+                Library.getInstance().getEnumValues();
+                System.out.println("Please select a category");
+                Library.getInstance().ListByCategory(Integer.parseInt(s.nextLine()));
+                BackOrExit(this::MemberUI);
+                break;
+            case "3":
+                System.out.println("Please enter your search key it can be ID, Author or Book name");
+                Scanner x = new Scanner(System.in);
+                String searchKey = x.nextLine();
+                System.out.println(Library.getInstance().searchBook(searchKey));
+                BackOrExit(this::LibrarianUI);
+                break;
+            case "4":
+                Library.getInstance().list_barrowed_books();
+                BackOrExit(this::LibrarianUI);
+                break;
+            default:
+                init();
+
+        }
     }
 
-    private void LibrarianUI() {
+    private void login() {
+        Scanner input = new Scanner(System.in);
+        String name, password;
+        while (loggedInMember == null) {
+            System.out.println("Please enter your username (*_*)");
+            name = input.nextLine();
+            System.out.println("Please enter your password (-_-)");
+            password = input.nextLine();
+            loggedInMember = Library.getInstance().auth_check(name, password);
+            if (loggedInMember != null) {
+                break;
+            }
 
+            System.out.println("\u001B[31mWrong username or password\u001B[0m");
+        }
     }
 }

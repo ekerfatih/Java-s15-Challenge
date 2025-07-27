@@ -12,9 +12,9 @@ public class Author extends Person {
         super(name);
     }
 
-    public Book new_book(long id, String name, Date date, Category category) {
+    public Book new_book(long id, String name, Date date, Category category, double price) {
         //TODO if not contain validation
-        Book book = new Book(id, this, name, date, category);
+        Book book = new Book(id, this, name, date, category, price);
         books.add(book);
         return book;
     }

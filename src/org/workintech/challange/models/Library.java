@@ -14,34 +14,39 @@ public class Library {
 
     private static Set<Author> authorSet = new HashSet<>();
     Map<Book, Integer> books;
-    Map<Book, Reader> barrowMap;
-    Set<Reader> readers = new HashSet<>();
+    HashSet<BarrowCredentials> barrowSet = new HashSet<>();
+    Set<Member> members;
+
+    private BarrowCredentials findByIdBarrowCredentials(Book book, Reader reader) {
+        return barrowSet.stream()
+                .filter(b -> b.getBook() == book && b.getReader() == reader)
+                .findFirst()
+                .orElse(null);
+
+    }
 
     private Library() {
 
+        members = Set.of(
+                new Member("guser", "guser", new Reader("Gizem")),
+                new Member("ruser", "ruser", new Reader("Rifat"))
+        );
 
-        Reader ahmet = new Reader("Ahmet");
-        Reader mehmet = new Reader("Mehmet");
-        Reader buse = new Reader("Buse");
-        readers.add(ahmet);
-        readers.add(mehmet);
-        readers.add(buse);
+        Book book1 = new Book(1L, getAuthorByName("George Orwell"), "1984", new Date(1949 - 1900, Calendar.JUNE, 8), Category.HISTORY, 15.35);
+        Book book5 = new Book(5L, getAuthorByName("George Orwell"), "Animal Farm", new Date(1945 - 1900, Calendar.AUGUST, 17), Category.FICTION, 17.95);
+        Book book6 = new Book(6L, getAuthorByName("George Orwell"), "Homage to Catalonia", new Date(1938 - 1900, Calendar.APRIL, 25), Category.NON_FICTION, 12.55);
 
-        Book book1 = new Book(1L, getAuthorByName("George Orwell"), "1984", new Date(1949 - 1900, Calendar.JUNE, 8), Category.HISTORY);
-        Book book5 = new Book(5L, getAuthorByName("George Orwell"), "Animal Farm", new Date(1945 - 1900, Calendar.AUGUST, 17), Category.FICTION);
-        Book book6 = new Book(6L, getAuthorByName("George Orwell"), "Homage to Catalonia", new Date(1938 - 1900, Calendar.APRIL, 25), Category.NON_FICTION);
+        Book book2 = new Book(2L, getAuthorByName("J.R.R. Tolkien"), "The Hobbit", new Date(1937 - 1900, Calendar.SEPTEMBER, 21), Category.FANTASY, 11.75);
+        Book book7 = new Book(7L, getAuthorByName("J.R.R. Tolkien"), "The Lord of the Rings", new Date(1954 - 1900, Calendar.JULY, 29), Category.FANTASY, 10.05);
+        Book book8 = new Book(8L, getAuthorByName("J.R.R. Tolkien"), "The Silmarillion", new Date(1977 - 1900, Calendar.SEPTEMBER, 15), Category.FANTASY, 17.85);
 
-        Book book2 = new Book(2L, getAuthorByName("J.R.R. Tolkien"), "The Hobbit", new Date(1937 - 1900, Calendar.SEPTEMBER, 21), Category.FANTASY);
-        Book book7 = new Book(7L, getAuthorByName("J.R.R. Tolkien"), "The Lord of the Rings", new Date(1954 - 1900, Calendar.JULY, 29), Category.FANTASY);
-        Book book8 = new Book(8L, getAuthorByName("J.R.R. Tolkien"), "The Silmarillion", new Date(1977 - 1900, Calendar.SEPTEMBER, 15), Category.FANTASY);
+        Book book3 = new Book(3L, getAuthorByName("F. Scott Fitzgerald"), "The Great Gatsby", new Date(1925 - 1900, Calendar.APRIL, 10), Category.FICTION, 22.45);
+        Book book9 = new Book(9L, getAuthorByName("F. Scott Fitzgerald"), "Tender Is the Night", new Date(1934 - 1900, Calendar.APRIL, 12), Category.FICTION, 5.55);
+        Book book10 = new Book(10L, getAuthorByName("F. Scott Fitzgerald"), "This Side of Paradise", new Date(1920 - 1900, Calendar.MARCH, 26), Category.FICTION, 3.75);
 
-        Book book3 = new Book(3L, getAuthorByName("F. Scott Fitzgerald"), "The Great Gatsby", new Date(1925 - 1900, Calendar.APRIL, 10), Category.FICTION);
-        Book book9 = new Book(9L, getAuthorByName("F. Scott Fitzgerald"), "Tender Is the Night", new Date(1934 - 1900, Calendar.APRIL, 12), Category.FICTION);
-        Book book10 = new Book(10L, getAuthorByName("F. Scott Fitzgerald"), "This Side of Paradise", new Date(1920 - 1900, Calendar.MARCH, 26), Category.FICTION);
-
-        Book book4 = new Book(4L, getAuthorByName("Mary Shelley"), "Frankenstein", new Date(1818 - 1900, Calendar.JANUARY, 1), Category.FICTION);
-        Book book11 = new Book(11L, getAuthorByName("Mary Shelley"), "Mathilda", new Date(1819 - 1900, Calendar.JANUARY, 1), Category.FICTION);
-        Book book12 = new Book(12L, getAuthorByName("Mary Shelley"), "Valperga", new Date(1823 - 1900, Calendar.JANUARY, 1), Category.HISTORY);
+        Book book4 = new Book(4L, getAuthorByName("Mary Shelley"), "Frankenstein", new Date(1818 - 1900, Calendar.JANUARY, 1), Category.FICTION, 17.25);
+        Book book11 = new Book(11L, getAuthorByName("Mary Shelley"), "Mathilda", new Date(1819 - 1900, Calendar.JANUARY, 1), Category.FICTION, 12.22);
+        Book book12 = new Book(12L, getAuthorByName("Mary Shelley"), "Valperga", new Date(1823 - 1900, Calendar.JANUARY, 1), Category.HISTORY, 20.20);
         books = new HashMap<>(Map.ofEntries(
                 Map.entry(book1, 4),
                 Map.entry(book2, 3),
@@ -56,8 +61,8 @@ public class Library {
                 Map.entry(book11, 1),
                 Map.entry(book12, 3)
         ));
-
     }
+
 
     public Author getAuthorByName(String name) {
         for (Author author : authorSet) {
@@ -74,14 +79,19 @@ public class Library {
         System.out.println(books);
     }
 
-    public Set<Book> ListByCategory(Category category) {
-        Set<Book> newList = new HashSet<>();
+    public void ListByCategory(int category) {
         for (Book book : books.keySet()) {
-            if (book.getCategory() == category) {
-                newList.add(book);
+            if (book.getCategory() == Category.values()[category - 1]) {
+                System.out.println(book);
             }
         }
-        return newList;
+    }
+
+    public void getEnumValues() {
+        Category[] categories = Category.values();
+        for (int i = 0; i < categories.length; i++) {
+            System.out.println((i + 1) + " - " + categories[i]);
+        }
     }
 
     public void add_new_book(String authorName, Book book, Integer quantity) {
@@ -103,6 +113,13 @@ public class Library {
             }
         }
         return null;
+    }
+
+    public void list_barrowed_books() {
+        if (barrowSet.isEmpty()) System.out.println("Henüz ödünç alınmış bir kitap bulunmamaktadır.");
+        for (BarrowCredentials b : barrowSet) {
+            System.out.println(b.getBook().get_title() + " book is gather by " + b.getReader().getName() + " at " + b.getGatheredTime());
+        }
     }
 
     public <T> Book searchBook(T value) {
@@ -153,6 +170,42 @@ public class Library {
         Book book = searchBookById(id);
         book.update(author, name, date, category);
     }
+
+    public void request_book(int bookID, Reader reader) {
+        Book book = searchBookById(bookID);
+        if (this.books.get(book) > 0 && reader.isReaderHaveTheBook(book)) {
+            reader.barrow_book(book);
+            int booksLeft = this.books.get(book) - 1;
+            this.books.put(book, booksLeft);
+            barrowSet.add(new BarrowCredentials(reader, book));
+            System.out.println("Book barrowed successfully");
+            System.out.printf("Your deposit reciept : ");
+            System.out.printf(String.valueOf("$" + book.getPrice()));
+        }
+    }
+
+    public void book_take_back(Book book, Reader reader) {
+        if (this.books.containsKey(book) && !reader.isReaderHaveTheBook(book)) {
+            int newBookCount = this.books.get(book) + 1;
+            this.books.put(book, newBookCount);
+            barrowSet.remove(findByIdBarrowCredentials(book, reader));
+            System.out.println("Book given back successfully");
+            System.out.printf("Your deposit : ");
+            System.out.printf("$" + book.getPrice());
+        } else {
+            System.out.println("Sistemde olmayan kitabı geri veremezsiniz");
+        }
+    }
+
+    public Member auth_check(String user, String password) {
+        for (Member m : members) {
+            if (m.getUserName().equals(user) && m.getPassword().equals(password)) {
+                return m;
+            }
+        }
+        return null;
+    }
+
 }
 
 

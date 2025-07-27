@@ -15,7 +15,6 @@ public class Main {
 //        System.out.println("**************************************************");
 //        System.out.println(Library.getInstance().searchBook(2));
 ////        Library.getInstance().ListBooks();
-//
         Console console = new Console();
     }
 }

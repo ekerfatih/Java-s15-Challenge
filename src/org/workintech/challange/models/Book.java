@@ -8,6 +8,11 @@ public class Book {
     private Category category;
     private Author author;
     private String name;
+
+    public double getPrice() {
+        return price;
+    }
+
     private double price;
     private Reader owner;
     private Status status;
@@ -38,12 +43,13 @@ public class Book {
 
     // </editor-fold>
     // <editor-fold desc="Constructors">
-    public Book(long id, Author author, String name, Date date, Category category) {
+    public Book(long id, Author author, String name, Date date, Category category, double price) {
         this.id = id;
         this.author = author;
         this.category = category;
         this.name = name;
         this.release_date = date;
+        this.price = price;
     }
 
     public Book(long id, Author author, String name, Date date, Category category, String edition, double price) {
