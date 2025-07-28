@@ -87,6 +87,10 @@ public class Library {
         }
     }
 
+    public Category GetCategoryById(int category) {
+        return Category.values()[category - 1];
+    }
+
     public void getEnumValues() {
         Category[] categories = Category.values();
         for (int i = 0; i < categories.length; i++) {
@@ -94,8 +98,8 @@ public class Library {
         }
     }
 
-    public void add_new_book(String authorName, Book book, Integer quantity) {
-        books.put(getAuthorByName(authorName).new_book(book), quantity);
+    public void add_new_book(long id, String author, String name, Date date, Category category, double price, int quantity) {
+        books.put(new Book(id, getAuthorByName(author), name, date, category, price), quantity);
     }
 
     //    public Book searchBook(Predicate<Book> condition) {
@@ -116,7 +120,7 @@ public class Library {
     }
 
     public void list_barrowed_books() {
-        if (barrowSet.isEmpty()) System.out.println("Henüz ödünç alınmış bir kitap bulunmamaktadır.");
+        if (barrowSet.isEmpty()) System.out.println("There is no book given away.");
         for (BarrowCredentials b : barrowSet) {
             System.out.println(b.getBook().get_title() + " book is gather by " + b.getReader().getName() + " at " + b.getGatheredTime());
         }
@@ -185,7 +189,7 @@ public class Library {
     }
 
     public void book_take_back(Book book, Reader reader) {
-        if (this.books.containsKey(book) && !reader.isReaderHaveTheBook(book)) {
+        if (this.books.containsKey(book) && reader.isReaderHaveTheBook(book)) {
             int newBookCount = this.books.get(book) + 1;
             this.books.put(book, newBookCount);
             barrowSet.remove(findByIdBarrowCredentials(book, reader));
@@ -193,7 +197,7 @@ public class Library {
             System.out.printf("Your deposit : ");
             System.out.printf("$" + book.getPrice());
         } else {
-            System.out.println("Sistemde olmayan kitabı geri veremezsiniz");
+            System.out.println("You cant give back a book not already in the system");
         }
     }
 

@@ -1,9 +1,11 @@
 package org.workintech.challange.console;
 
+import org.workintech.challange.models.Category;
 import org.workintech.challange.models.Library;
 import org.workintech.challange.models.Member;
 
 import java.sql.SQLOutput;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Console {
@@ -56,6 +58,7 @@ public class Console {
 
         System.out.println("1- List Books");
         System.out.println("2- Search Books");
+        direct_to_main_menu();
         String answer = s.nextLine();
         clearScreen();
         switch (answer) {
@@ -210,6 +213,39 @@ public class Console {
                 break;
             case "4":
                 Library.getInstance().list_barrowed_books();
+                BackOrExit(this::LibrarianUI);
+                break;
+            case "5":
+                System.out.println("\nPlease enter id");
+                long id = Long.parseLong(s.nextLine());
+
+                System.out.println("\nPlease enter author");
+                String author = s.nextLine();
+
+                System.out.println("\nPlease enter book name");
+                String bookName = s.nextLine();
+
+                System.out.println("\nPlease select a category");
+                Library.getInstance().getEnumValues();
+                Category category = Library.getInstance().GetCategoryById(Integer.parseInt(s.nextLine()));
+
+                System.out.println("\nPlease enter price");
+                double price = Double.parseDouble(s.nextLine());
+
+                System.out.println("\nPlease enter quantity");
+                int quantity = Integer.parseInt(s.nextLine());
+                try {
+                    Library.getInstance().add_new_book(id, author, bookName, new Date(), category, price, quantity);
+                    System.out.println("The " + bookName + " named book successfully added to the Library");
+                } catch (Exception e) {
+                    throw e;
+                }
+                BackOrExit(this::LibrarianUI);
+                break;
+            case "6":
+                Library.getInstance().ListBooks();
+                System.out.println("\nWhich book id do you want to delete?");
+                Library.getInstance().remove_book(Integer.parseInt(s.nextLine()));
                 BackOrExit(this::LibrarianUI);
                 break;
             default:

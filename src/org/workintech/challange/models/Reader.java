@@ -3,24 +3,9 @@ package org.workintech.challange.models;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO 5 kitap limiti
 public class Reader extends Person {
     private Map<Book, Boolean> books;
 
-    // true olanlar barrowed
-    public Reader(String name, Map<Book, Boolean> books) {
-        this(name);
-        this.books = new HashMap<>(books);
-    }
-
-    private Book find_book(int id) {
-        for (Book b : books.keySet()) {
-            if (b.getId() == id) {
-                return b;
-            }
-        }
-        return null;
-    }
 
     public Reader(String name) {
         super(name);
@@ -32,9 +17,7 @@ public class Reader extends Person {
     }
 
     public void bookList() {
-        for (Book b : books.keySet()) {
-            System.out.println(b);
-        }
+        books.keySet().forEach(System.out::println);
     }
 
     public void barrow_book(Book book) {
@@ -47,13 +30,9 @@ public class Reader extends Person {
     }
 
     public Book return_book(int id) {
-        for (Book b : books.keySet()) {
-            if (b.getId() == id) {
-                books.remove(find_book(id));
-                return b;
-            }
-        }
-        return null;
+        Book book = books.keySet().stream().filter(b -> b.getId() == id).findFirst().orElse(null);
+        books.remove(book);
+        return book;
     }
 
     public void show_book(String name) {
