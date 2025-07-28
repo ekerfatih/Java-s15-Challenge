@@ -64,11 +64,12 @@ public class Book {
 
     // </editor-fold>
     // <editor-fold desc="Methods">
-    public void update(Author author, String name, Date date, Category category) {
+    public void update(Author author, String name, Date date, Category category, double price) {
         this.author = author;
         this.category = category;
         this.name = name;
         this.release_date = date;
+        this.price = price;
     }
 
     public void change_owner() {

@@ -188,6 +188,7 @@ public class Console {
         System.out.println("4- List barrowed books");
         System.out.println("5- Add new book to library");
         System.out.println("6- Delete a book from library");
+        System.out.println("7- Update a book from library");
         direct_to_main_menu();
         String answer = s.nextLine();
         clearScreen();
@@ -246,6 +247,35 @@ public class Console {
                 Library.getInstance().ListBooks();
                 System.out.println("\nWhich book id do you want to delete?");
                 Library.getInstance().remove_book(Integer.parseInt(s.nextLine()));
+                BackOrExit(this::LibrarianUI);
+                break;
+            case "7":
+                System.out.println("\nPlease enter id");
+                String stringid = s.nextLine();
+                long UpdateId = Long.parseLong(stringid);
+                System.out.println(Library.getInstance().searchBook(Integer.parseInt(stringid)));
+
+                System.out.println("\nPlease enter author");
+                String UpdateAuth = s.nextLine();
+
+                System.out.println("\nPlease enter book name");
+                String updateBook = s.nextLine();
+
+                System.out.println("\nPlease select a category");
+                Library.getInstance().getEnumValues();
+                Category updateCategory = Library.getInstance().GetCategoryById(Integer.parseInt(s.nextLine()));
+
+                System.out.println("\nPlease enter price");
+                double updateprice = Double.parseDouble(s.nextLine());
+
+                System.out.println("\nPlease enter quantity");
+                int updateQuantity = Integer.parseInt(s.nextLine());
+                try {
+                    Library.getInstance().update_book(UpdateId, UpdateAuth, updateBook, new Date(), updateCategory, updateprice);
+                    System.out.println("The " + updateBook + " named book successfully updated");
+                } catch (Exception e) {
+                    throw e;
+                }
                 BackOrExit(this::LibrarianUI);
                 break;
             default:

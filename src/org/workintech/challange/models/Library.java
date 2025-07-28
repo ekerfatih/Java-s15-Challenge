@@ -170,9 +170,9 @@ public class Library {
         }
     }
 
-    public void update_book(long id, Author author, String name, Date date, Category category) {
+    public void update_book(long id, String author, String name, Date date, Category category, double price) {
         Book book = searchBookById(id);
-        book.update(author, name, date, category);
+        book.update(getAuthorByName(author), name, date, category, price);
     }
 
     public void request_book(int bookID, Reader reader) {
